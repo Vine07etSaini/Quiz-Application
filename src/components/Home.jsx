@@ -1,7 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Brain} from "lucide-react";
 const Home = () => {
+
+    const navigate = useNavigate();
+    const handleStartQuiz = () => { // Clear previous quiz data
+      navigate("/quiz");
+      localStorage.removeItem("quizState");  // Redirect to the quiz page
+    };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
       <div className="max-w-3xl text-center">
@@ -13,12 +20,11 @@ const Home = () => {
           Test your knowledge and improve your skills with our engaging quiz
           questions.
         </p>
-        <Link
-          to="/quiz"
-          className="bg-indigo-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-indigo-700 transition-colors"
-        >
+        <button
+          onClick={handleStartQuiz}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-indigo-700 transition-colors">
           Start Quiz
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -4,10 +4,10 @@ import { QuizHistory } from "../components/QuizHistory";
 import { saveAttempt, getAttempts, deleteAttempts } from "../utils/db";
 import { Brain, CheckCircle2, XCircle } from "lucide-react";
 import { Timer as TimerIcon } from "lucide-react";
-import { Result } from "postcss";
-import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 const Quiz = () => {
+  const navigate = useNavigate();
   // Quiz State
   const [quizState, setQuizState] = useState(() => {
     const savedState = localStorage.getItem("quizState");
@@ -15,14 +15,18 @@ const Quiz = () => {
       ? JSON.parse(savedState)
       : { currentQuestionIndex: 0, answers: [], isComplete: false };
   });
+
   // Timer State
   const [timeLeft, setTimeLeft] = useState(() => {
     return Number(localStorage.getItem("timeLeft")) || 30;
   });
+
   //Attempt State
   const [attempts, setAttempts] = useState([]);
+
   //showFeedback State
   const [showFeedback, setShowFeedback] = useState(false);
+
   //Current Question(int) and isLastQuestion(boolean)
   const currentQuestion = questions[quizState.currentQuestionIndex];
   const isLastQuestion =quizState.currentQuestionIndex === questions.length - 1;
@@ -35,6 +39,7 @@ const Quiz = () => {
   useEffect(() => {
     getAttempts().then(setAttempts);
   }, []);
+
   //Timer
   useEffect(() => {
     if (showFeedback) return;
@@ -51,7 +56,8 @@ const Quiz = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  },[showFeedback,quizState.currentQuestionIndex]);
+  },[showFeedback,quizState.currentQuestionIndex,quizState.isComplete]);
+
   //Handle Timeout
   const handleTimeout = () => {
     if (quizState.isComplete) return;
@@ -69,6 +75,11 @@ const Quiz = () => {
     localStorage.setItem("timeLeft", 30);
     setShowFeedback(false);
   };
+   
+   const handleGoHome = () => {
+     localStorage.removeItem("quizState"); // Clear saved quiz data
+     navigate("/");
+   };
   //Handle Answer
   const handleAnswer = (answerIndex) => {
     if (quizState.isComplete || showFeedback) return;
@@ -83,7 +94,8 @@ const Quiz = () => {
       return updatedState;
     });
     setShowFeedback(true);
-    //Move to next question after 2 seconds
+
+    //Move to next question after 1 seconds
     setTimeout(()=>{
       setShowFeedback(false);
       if(quizState.currentQuestionIndex < questions.length - 1){
@@ -98,12 +110,14 @@ const Quiz = () => {
       }
     },1000);
   };
+
   //Calculate Score
   const calculateScore = () => {
     return quizState.answers.reduce((score, answer, index) => {
       return score + (answer === questions[index].correctAnswer ? 1 : 0);
     }, 0);
   };
+
   //Handle Retry
   const handleRetry = async () => {
     const score = calculateScore();
@@ -121,6 +135,7 @@ const Quiz = () => {
     localStorage.removeItem("quizState"); // Clear saved state
     setTimeLeft(30);
   };
+
   //Handle Next Question
   const handleNextQuestion = () => {
     if (quizState.currentQuestionIndex < questions.length) {
@@ -137,6 +152,7 @@ const Quiz = () => {
       setTimeLeft(30); // Reset timer for next question
     }
   };
+   
   // If Quiz is Complete, Show Results
   if (quizState.isComplete) {
     return (
@@ -153,24 +169,19 @@ const Quiz = () => {
               </p>
               <button
                 onClick={handleRetry}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                className="bg-indigo-600 text-white px-6 py-2 mx-2 rounded-md hover:bg-indigo-700 transition-colors"
               >
                 Try Again
+              </button>
+              <button
+                className="bg-red-600 text-white px-9 py-2 rounded-md hover:bg-red-600 transition-colors"
+                onClick={handleGoHome}
+              >
+                Home
               </button>
             </div>
           </div>
         </div>
-        <button
-          className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-          onClick={deleteAttempts}
-        >
-          Clear History
-        </button>
-        <Link
-          className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors"
-          to="/">
-          Home
-        </Link>
         <QuizHistory attempts={attempts} />
       </div>
     );
