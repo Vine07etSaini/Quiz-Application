@@ -27,7 +27,7 @@ export function QuizHistory({ attempts }) {
               {formatDistanceToNow(attempt.timestamp, { addSuffix: true })}
             </div>
             <div className="text-lg font-semibold">
-              Score: {attempt.score}
+              Score: {attempt.score} / {attempt.totalQuestions}
             </div>
           </div>
         </div>

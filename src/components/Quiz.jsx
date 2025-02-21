@@ -9,13 +9,16 @@ import { Link } from "react-router-dom";
 
 const Quiz = () => {
   // Quiz State
-  const [quizState, setQuizState] = useState({
-    currentQuestionIndex: 0,
-    answers: [],
-    isComplete: false,
+  const [quizState, setQuizState] = useState(() => {
+    const savedState = localStorage.getItem("quizState");
+    return savedState
+      ? JSON.parse(savedState)
+      : { currentQuestionIndex: 0, answers: [], isComplete: false };
   });
   // Timer State
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(() => {
+    return Number(localStorage.getItem("timeLeft")) || 30;
+  });
   //Attempt State
   const [attempts, setAttempts] = useState([]);
   //showFeedback State
@@ -23,6 +26,11 @@ const Quiz = () => {
   //Current Question(int) and isLastQuestion(boolean)
   const currentQuestion = questions[quizState.currentQuestionIndex];
   const isLastQuestion =quizState.currentQuestionIndex === questions.length - 1;
+
+  useEffect(() => {
+    localStorage.setItem("quizState", JSON.stringify(quizState));
+  }, [quizState]);
+
   //Get ALl Attempts
   useEffect(() => {
     getAttempts().then(setAttempts);
@@ -37,7 +45,9 @@ const Quiz = () => {
           handleTimeout();
           return 0;
         }
-        return prev-1;
+         const newTimeLeft = prev - 1;
+         localStorage.setItem("timeLeft", newTimeLeft); // Save timer to localStorage
+         return newTimeLeft;
       });
     }, 1000);
     return () => clearInterval(timer);
@@ -55,7 +65,8 @@ const Quiz = () => {
         isComplete: prev.currentQuestionIndex + 1 === questions.length,
       };
     });
-    setTimeLeft(30);
+    setTimeLeft(30); // Reset the timer for the next question
+    localStorage.setItem("timeLeft", 30);
     setShowFeedback(false);
   };
   //Handle Answer
@@ -85,7 +96,7 @@ const Quiz = () => {
             });
         setTimeLeft(30); // Reset timer for next question
       }
-    },1500);
+    },1000);
   };
   //Calculate Score
   const calculateScore = () => {
@@ -107,6 +118,7 @@ const Quiz = () => {
     setAttempts(newAttempts);
     setQuizState({ currentQuestionIndex: 0, answers: [], isComplete: false });
     setShowFeedback(false);
+    localStorage.removeItem("quizState"); // Clear saved state
     setTimeLeft(30);
   };
   //Handle Next Question
