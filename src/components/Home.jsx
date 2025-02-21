@@ -5,8 +5,9 @@ const Home = () => {
 
     const navigate = useNavigate();
     const handleStartQuiz = () => { // Clear previous quiz data
+      localStorage.removeItem("quizState"); 
       navigate("/quiz");
-      localStorage.removeItem("quizState");  // Redirect to the quiz page
+       // Redirect to the quiz page
     };
 
   return (

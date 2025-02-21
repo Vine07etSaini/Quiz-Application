@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { questions } from "../data/questions";
 import { QuizHistory } from "../components/QuizHistory";
-import { saveAttempt, getAttempts, deleteAttempts } from "../utils/db";
+import { saveAttempt, getAttempts} from "../utils/db";
 import { Brain, CheckCircle2, XCircle } from "lucide-react";
 import { Timer as TimerIcon } from "lucide-react";
 import { useNavigate} from "react-router-dom";
@@ -56,7 +56,7 @@ const Quiz = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  },[showFeedback,quizState.currentQuestionIndex,quizState.isComplete]);
+  },[quizState.currentQuestionIndex,quizState.isComplete,showFeedback]);
 
   //Handle Timeout
   const handleTimeout = () => {

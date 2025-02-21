@@ -1,26 +1,26 @@
 export const questions = [
   {
     id: 1,
-    text: "What is the capital of France?",
-    options: ["London", "Berlin", "Paris", "Madrid"],
-    correctAnswer: 2
+    text: "Which planet is closest to the Sun?",
+    options: ["Venus","Mercury","Earth","Mars"],
+    correctAnswer: 1
   },
   {
     id: 2,
-    text: "Which planet is known as the Red Planet?",
-    options: ["Venus", "Mars", "Jupiter", "Saturn"],
+    text: "Which data structure organizes items in a First-In, First-Out (FIFO) manner?",
+    options: ["Stack", "Queue","Tree","Graph"],
     correctAnswer: 1
   },
   {
     id: 3,
-    text: "Who painted the Mona Lisa?",
-    options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+    text: "Which of the following is primarily used for structuring web pages?",
+    options: ["Python","Java","HTML","C++"],
     correctAnswer: 2
   },
   {
     id: 4,
-    text: "What is the largest ocean on Earth?",
-    options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    text: "Which of these processes is not typically involved in refining petroleum?",
+    options: [ "Fractional distillation", "Cracking","Polymerization","Filtration",],
     correctAnswer: 3
   },
   {
