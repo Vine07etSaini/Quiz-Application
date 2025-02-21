@@ -76,10 +76,6 @@ const Quiz = () => {
     setShowFeedback(false);
   };
    
-   const handleGoHome = () => {
-     localStorage.removeItem("quizState"); // Clear saved quiz data
-     navigate("/");
-   };
   //Handle Answer
   const handleAnswer = (answerIndex) => {
     if (quizState.isComplete || showFeedback) return;
@@ -172,12 +168,6 @@ const Quiz = () => {
                 className="bg-indigo-600 text-white px-6 py-2 mx-2 rounded-md hover:bg-indigo-700 transition-colors"
               >
                 Try Again
-              </button>
-              <button
-                className="bg-red-600 text-white px-9 py-2 rounded-md hover:bg-red-600 transition-colors"
-                onClick={handleGoHome}
-              >
-                Home
               </button>
             </div>
           </div>
